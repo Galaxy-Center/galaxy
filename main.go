@@ -1,13 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"net/http"
+	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
 )
 
-//go:generate sqlboiler --wipe mysql
-
 func main() {
-	fmt.Println("vim-go")
+	log.Info("galaxy server starting")
+
+	router := gin.Default()
+	router.GET("/about", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"app":  "galaxy",
+			"time": time.Now().String(),
+		})
+	})
+	router.Run(":8080")
 }

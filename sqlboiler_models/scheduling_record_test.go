@@ -30,7 +30,7 @@ func testSchedulingRecords(t *testing.T) {
 	}
 }
 
-func testSchedulingRecordsDelete(t *testing.T) {
+func TestSchedulingRecordsDelete(t *testing.T) {
 	t.Parallel()
 
 	seed := randomize.NewSeed()
@@ -712,5 +712,22 @@ func testSchedulingRecordsUpsert(t *testing.T) {
 	}
 	if count != 1 {
 		t.Error("want one record, got:", count)
+	}
+}
+
+func Test_testSchedulingRecordsDelete(t *testing.T) {
+	type args struct {
+		t *testing.T
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			testSchedulingRecordsDelete(tt.args.t)
+		})
 	}
 }
