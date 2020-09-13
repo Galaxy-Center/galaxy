@@ -1,0 +1,12 @@
+add-panic-variants = "true"
+no-context = "true"
+pkgname = "galaxy_db"
+output = "models"
+
+[mysql]
+    dbname = "galaxy"
+    host = "localhost"
+    port = 3306
+    user = "lance"
+    pass = "Lancexu@1992"
+    sslmode = "false"
