@@ -14,8 +14,8 @@ type Database struct {
 
 var gormDB *gorm.DB
 
-// init initials a database and save the reference to `Database` struct.
-func init() {
+// Init initials a database and save the reference to `Database` struct.
+func Init() {
 	dsn := "lance:Lancexu@1992@tcp(127.0.0.1:3306)/galaxy?charset=utf8mb4&parseTime=true&loc=Local"
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,   // DSN data source name
