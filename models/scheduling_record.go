@@ -24,7 +24,7 @@ import (
 // SchedulingRecord is an object representing the database table.
 type SchedulingRecord struct {
 	ID        uint64      `boil:"id" json:"id" toml:"id" yaml:"id"`
-	TaskID    int64       `boil:"task_id" json:"task_id" toml:"task_id" yaml:"task_id"`
+	TaskID    uint64      `boil:"task_id" json:"task_id" toml:"task_id" yaml:"task_id"`
 	Status    string      `boil:"status" json:"status" toml:"status" yaml:"status"`
 	Message   null.String `boil:"message" json:"message,omitempty" toml:"message" yaml:"message,omitempty"`
 	Active    uint8       `boil:"active" json:"active" toml:"active" yaml:"active"`
@@ -70,22 +70,6 @@ func (w whereHelperuint64) LTE(x uint64) qm.QueryMod { return qmhelper.Where(w.f
 func (w whereHelperuint64) GT(x uint64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
 func (w whereHelperuint64) GTE(x uint64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
 func (w whereHelperuint64) IN(slice []uint64) qm.QueryMod {
-	values := make([]interface{}, 0, len(slice))
-	for _, value := range slice {
-		values = append(values, value)
-	}
-	return qm.WhereIn(fmt.Sprintf("%s IN ?", w.field), values...)
-}
-
-type whereHelperint64 struct{ field string }
-
-func (w whereHelperint64) EQ(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.EQ, x) }
-func (w whereHelperint64) NEQ(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.NEQ, x) }
-func (w whereHelperint64) LT(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.LT, x) }
-func (w whereHelperint64) LTE(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.LTE, x) }
-func (w whereHelperint64) GT(x int64) qm.QueryMod  { return qmhelper.Where(w.field, qmhelper.GT, x) }
-func (w whereHelperint64) GTE(x int64) qm.QueryMod { return qmhelper.Where(w.field, qmhelper.GTE, x) }
-func (w whereHelperint64) IN(slice []int64) qm.QueryMod {
 	values := make([]interface{}, 0, len(slice))
 	for _, value := range slice {
 		values = append(values, value)
@@ -150,7 +134,7 @@ func (w whereHelperuint8) IN(slice []uint8) qm.QueryMod {
 
 var SchedulingRecordWhere = struct {
 	ID        whereHelperuint64
-	TaskID    whereHelperint64
+	TaskID    whereHelperuint64
 	Status    whereHelperstring
 	Message   whereHelpernull_String
 	Active    whereHelperuint8
@@ -160,7 +144,7 @@ var SchedulingRecordWhere = struct {
 	UpdatedBy whereHelpernull_String
 }{
 	ID:        whereHelperuint64{field: "`scheduling_record`.`id`"},
-	TaskID:    whereHelperint64{field: "`scheduling_record`.`task_id`"},
+	TaskID:    whereHelperuint64{field: "`scheduling_record`.`task_id`"},
 	Status:    whereHelperstring{field: "`scheduling_record`.`status`"},
 	Message:   whereHelpernull_String{field: "`scheduling_record`.`message`"},
 	Active:    whereHelperuint8{field: "`scheduling_record`.`active`"},
