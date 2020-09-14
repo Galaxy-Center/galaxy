@@ -8,10 +8,10 @@ import (
 
 func TestCreate(t *testing.T) {
 	db.Init()
-	Create(&Task{
-		ID:                 1,
+
+	task := &Task{
 		Name:               "test",
-		Code:               "code",
+		Code:               "codeA",
 		Type:               "JOB",
 		Status:             "ENABLED",
 		ExpiredAt:          100,
@@ -23,5 +23,9 @@ func TestCreate(t *testing.T) {
 		Active:             true,
 		CreatedAt:          10000,
 		UpdatedAt:          10000,
-	})
+	}
+	Create(task)
+
+	task.ExpiredAt(200)
+	Save(task)
 }

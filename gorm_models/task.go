@@ -1,7 +1,9 @@
 package models
 
 import (
-	db "github.com/galaxy-center/galaxy/lifecycle"
+	"time"
+	"gorm.io/gorm"
+	galaxy_db "github.com/galaxy-center/galaxy/lifecycle"
 )
 
 // Task is an object representing the database table.
@@ -25,6 +27,45 @@ type Task struct {
 	UpdatedBy          string `gorm:"column:updated_by" json:"updated_by,omitempty" toml:"updated_by" yaml:"updated_by,omitempty"`
 }
 
+var TaskColumns = struct {
+	ID                 string
+	Name               string
+	Code               string
+	Type               string
+	Status             string
+	ExpiredAt          string
+	Cron               string
+	Timeout            string
+	SchedulingType     string
+	SchedulingCategory string
+	Assess             string
+	Executor           string
+	Active             string
+	CreatedAt          string
+	CreatedBy          string
+	UpdatedAt          string
+	UpdatedBy          string
+}{
+	ID:                 "id",
+	Name:               "name",
+	Code:               "code",
+	Type:               "type",
+	Status:             "status",
+	ExpiredAt:          "expired_at",
+	Cron:               "cron",
+	Timeout:            "timeout",
+	SchedulingType:     "scheduling_type",
+	SchedulingCategory: "scheduling_category",
+	Assess:             "assess",
+	Executor:           "executor",
+	Active:             "active",
+	CreatedAt:          "created_at",
+	CreatedBy:          "created_by",
+	UpdatedAt:          "updated_at",
+	UpdatedBy:          "updated_by",
+}
+
+// Tabler defines the table name.
 type Tabler interface {
 	TableName() string
 }
@@ -34,9 +75,29 @@ func (Task) TableName() string {
 	return "task"
 }
 
+func (t *Task) BeforeCreate(tx *gorm.DB) (err error) {
+	currTime := time.Now().UnixNano()
+	if	t.CreatedAt <= 0 {
+		t.CreatedAt = currTime
+	}
+	if t.UpdatedAt <= 0 {
+		t.UpdatedAt = currTime
+	}
+}
+
 // Create a single Task to db by *gorm.DB
 func Create(task *Task) error {
-	db := db.GetDB()
+	db := galaxy_db.GetDB()
 	err := db.Create(task).Error
 	return err
+}
+
+// Save a single task will be stored to db
+// Note: all the fields will be updated to db, includes default value.
+func Save(task *Task) error {
+	db := galaxy_db.GetDB()
+	if err := db.Save(task).Error; err != nil {
+		return err
+	}
+	retun nil
 }
