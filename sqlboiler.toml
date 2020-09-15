@@ -5,8 +5,8 @@ output = "models"
 
 [mysql]
     dbname = "galaxy"
-    host = "localhost"
+    host = "45.32.253.249"
     port = 3306
     user = "lance"
-    pass = "Lancexu@1992"
+    pass = "lancexu1992"
     sslmode = "false"
