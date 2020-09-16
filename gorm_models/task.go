@@ -73,7 +73,7 @@ type Tabler interface {
 
 // TableName 会将 User 的表名重写为 `profiles`
 func (Task) TableName() string {
-	return "task"
+	return "tasks"
 }
 
 // BeforeCreate do somethings, e.g. checks for the necessary fileds.
@@ -165,7 +165,30 @@ func Get(id uint64) (*Task, error) {
 	return nil, err
 }
 
-func Paginate(p PaginationWrapper) (Response, error) {
-	// TODO
-	return nil, nil
+// TaskPagination implements of interface PaginationWrapper.
+type TaskPagination struct {
+	Pagination Pagination
+	TimeRange  []uint64
+}
+
+// Pagination returns the pagination of current query probe(查询探针).
+func (tp TaskPagination) Pagination() *Pagination {
+	return tp.Pagination
+}
+
+// From returns the time from at, aganist Task#CreatedAt.
+func (tp TaskPagination) From() uint64 {
+	return tp.TimeRange[0]
+}
+
+// To returns the time to at, aganist Task#CreatedAt.
+func (tp TaskPagination) To() uint64 {
+	return tp.TimeRange[1]
+}
+
+// PaginateQuery todo
+func PaginateQuery(pw PaginationWrapper) (Response, error) {
+	db := galaxyDB.GetDB()
+	Paginate(pw.Pagination())(db)
+
 }

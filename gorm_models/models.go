@@ -6,20 +6,23 @@ import (
 
 // Pagination wrapper the info of paginate.
 type Pagination struct {
-	PageSize int32
-	Page     int32
+	PageSize int
+	Page     int
 }
 
 // Response wrapper the pagination result.
-type Response strcut {
-	Page int32
-	TotalPage int32
-	Total int32
-	Data interface{}
+type Response struct {
+	Page      int
+	TotalPage int
+	Total     int
+	Data      interface{}
 }
 
 // PaginationWrapper abstract interface wrapper of pagination infos confition.
 type PaginationWrapper interface {
+	Pagination() *Pagination
+	From() uint64
+	To() uint64
 }
 
 // Paginate returns a func with paging infomation.
