@@ -25,6 +25,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/spf13/viper v1.7.1
+	github.com/ugorji/go v1.1.8 // indirect
 	github.com/vattle/sqlboiler v2.5.0+incompatible // indirect
 	github.com/volatiletech/null v8.0.0+incompatible
 	github.com/volatiletech/null/v8 v8.1.0
