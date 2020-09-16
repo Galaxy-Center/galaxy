@@ -2,6 +2,7 @@ package models
 
 import (
 	"testing"
+	"time"
 
 	db "github.com/galaxy-center/galaxy/lifecycle"
 )
@@ -20,12 +21,12 @@ func TestCreate(t *testing.T) {
 		SchedulingCategory: "RPC",
 		Assess:             "Assess",
 		Executor:           "Executor",
-		Active:             true,
+		Actived:            true,
 		CreatedAt:          10000,
 		UpdatedAt:          10000,
 	}
 	Create(task)
 
-	task.ExpiredAt(200)
+	task.ExpiredAt = uint64(time.Now().UnixNano())
 	Save(task)
 }

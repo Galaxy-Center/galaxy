@@ -16,7 +16,7 @@ var gormDB *gorm.DB
 
 // Init initials a database and save the reference to `Database` struct.
 func Init() {
-	dsn := "lance:Lancexu@1992@tcp(127.0.0.1:3306)/galaxy?charset=utf8mb4&parseTime=true&loc=Local"
+	dsn := "lance:lancexu1992@tcp(45.32.253.249:3306)/galaxy?charset=utf8mb4&parseTime=true&loc=Local"
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,   // DSN data source name
 		DefaultStringSize:         256,   // string 类型字段的默认长度
@@ -30,10 +30,10 @@ func Init() {
 	}
 	gormDB = db
 
-	sqlDB, err := db.DB()
+	sqlDB, _ := db.DB()
 	sqlDB.SetMaxIdleConns(10)           // 设置空闲连接池中连接的最大数量
 	sqlDB.SetMaxOpenConns(32)           // 设置打开数据库连接的最大数量
-	sqlDB.SetConnMaxIdleTime(time.Hour) // 设置连接可复用的最大时间
+	sqlDB.SetConnMaxLifetime(time.Hour) // 设置连接可复用的最大时间
 }
 
 // GetDB returns *gorm.DB
