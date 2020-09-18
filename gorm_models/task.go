@@ -167,28 +167,35 @@ func Get(id uint64) (*Task, error) {
 
 // TaskPagination implements of interface PaginationWrapper.
 type TaskPagination struct {
-	Pagination Pagination
-	TimeRange  []uint64
+	Page       Pagination
+	Conditions map[string]interface{}
 }
 
 // Pagination returns the pagination of current query probe(查询探针).
 func (tp TaskPagination) Pagination() *Pagination {
-	return tp.Pagination
+	return &tp.Page
 }
 
-// From returns the time from at, aganist Task#CreatedAt.
-func (tp TaskPagination) From() uint64 {
-	return tp.TimeRange[0]
-}
-
-// To returns the time to at, aganist Task#CreatedAt.
-func (tp TaskPagination) To() uint64 {
-	return tp.TimeRange[1]
+// Attachment returns attached info.
+func (tp TaskPagination) Attachment() map[string]interface{} {
+	return tp.Conditions
 }
 
 // PaginateQuery todo
 func PaginateQuery(pw PaginationWrapper) (Response, error) {
-	db := galaxyDB.GetDB()
-	Paginate(pw.Pagination())(db)
+	var response Response
+	response.Page = pw.Pagination().Page
 
+	db := galaxyDB.GetDB()
+
+	var total int64
+	db.Scopes(Attach(pw.Attachment())).Count(&total)
+	response.Total = int(total)
+	response.TotalPage = int(total)/pw.Pagination().PageSize + 1
+
+	var tasks []Task
+	db.Scopes(Attach(pw.Attachment()), Paginate(pw.Pagination())).Find(&tasks)
+	response.Data = tasks
+
+	return response, nil
 }
