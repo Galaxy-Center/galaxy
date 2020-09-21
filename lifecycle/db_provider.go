@@ -3,6 +3,10 @@ package lifecycle
 import (
 	"time"
 
+	// "github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/github"
+	// log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -44,3 +48,16 @@ func GetDB() *gorm.DB {
 
 	return gormDB
 }
+
+// func MigrateDB() error {
+// 	m, err := migrate.New(
+// 		"file:///../migrations",
+// 		"mysql://lance:Lancexu@1992@tcp(localhost:3306)/galaxy_test?charset=utf8mb4&parseTime=true&loc=Local")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	if err := m.Up(); err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	return err
+// }

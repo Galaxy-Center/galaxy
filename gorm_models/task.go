@@ -28,6 +28,7 @@ type Task struct {
 	UpdatedBy          string `gorm:"column:updated_by" json:"updated_by,omitempty" toml:"updated_by" yaml:"updated_by,omitempty"`
 }
 
+// TaskColumns table field name.
 var TaskColumns = struct {
 	ID                 string
 	Name               string
@@ -41,7 +42,7 @@ var TaskColumns = struct {
 	SchedulingCategory string
 	Assess             string
 	Executor           string
-	Active             string
+	Actived            string
 	CreatedAt          string
 	CreatedBy          string
 	UpdatedAt          string
@@ -59,7 +60,7 @@ var TaskColumns = struct {
 	SchedulingCategory: "scheduling_category",
 	Assess:             "assess",
 	Executor:           "executor",
-	Active:             "active",
+	Actived:            "actived",
 	CreatedAt:          "created_at",
 	CreatedBy:          "created_by",
 	UpdatedAt:          "updated_at",
