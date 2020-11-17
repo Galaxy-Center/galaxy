@@ -9,7 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang-migrate/migrate v3.5.4+incompatible
-	github.com/golang-migrate/migrate/v4 v4.12.2
+	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kat-co/vala v0.0.0-20170210184112-42e1d8b61f12
 	github.com/magiconair/properties v1.8.2 // indirect
