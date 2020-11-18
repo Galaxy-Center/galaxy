@@ -1,5 +1,5 @@
 create table
-if not exists task
+if not exists tasks
 (
     id bigint unsigned auto_increment not null comment 'primary key' primary key,
     name varchar

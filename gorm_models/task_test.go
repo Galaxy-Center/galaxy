@@ -7,11 +7,11 @@ import (
 	db "github.com/galaxy-center/galaxy/lifecycle"
 )
 
-func TestCreateDB(t *testing.T) {
-	db.Init()
+// func TestCreateDB(t *testing.T) {
+// 	db.Init()
 
-	db.GetDB().AutoMigrate(&Task{})
-}
+// 	db.GetDB().AutoMigrate(&Task{})
+// }
 
 func TestCreate(t *testing.T) {
 	db.Init()

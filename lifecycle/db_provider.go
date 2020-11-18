@@ -3,10 +3,7 @@ package lifecycle
 import (
 	"time"
 
-	// "github.com/golang-migrate/migrate/v4"
-	_ "github.com/golang-migrate/migrate/v4/database/mysql"
-	_ "github.com/golang-migrate/migrate/v4/source/github"
-	// log "github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -20,7 +17,7 @@ var gormDB *gorm.DB
 
 // Init initials a database and save the reference to `Database` struct.
 func Init() {
-	dsn := "lance:Lancexu@1992@tcp(localhost:3306)/galaxy?charset=utf8mb4&parseTime=true&loc=Local"
+	dsn := "lance:Lancexu@1992@tcp(localhost:3306)/galaxy_test?charset=utf8mb4&parseTime=true&loc=Local"
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,   // DSN data source name
 		DefaultStringSize:         256,   // string 类型字段的默认长度
@@ -38,6 +35,8 @@ func Init() {
 	sqlDB.SetMaxIdleConns(10)           // 设置空闲连接池中连接的最大数量
 	sqlDB.SetMaxOpenConns(32)           // 设置打开数据库连接的最大数量
 	sqlDB.SetConnMaxLifetime(time.Hour) // 设置连接可复用的最大时间
+
+	log.Infoln("Database initialization completed.")
 }
 
 // GetDB returns *gorm.DB
@@ -48,16 +47,3 @@ func GetDB() *gorm.DB {
 
 	return gormDB
 }
-
-// func MigrateDB() error {
-// 	m, err := migrate.New(
-// 		"file:///../migrations",
-// 		"mysql://lance:Lancexu@1992@tcp(localhost:3306)/galaxy_test?charset=utf8mb4&parseTime=true&loc=Local")
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	if err := m.Up(); err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	return err
-// }

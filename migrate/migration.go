@@ -9,8 +9,10 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 // buildMigration returns *migrate.Migrate if everything is ok. otherwise return specified error.

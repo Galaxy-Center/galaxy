@@ -1,9 +1,10 @@
 package lifecycle
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestMigrate(t *testing.T) {
-	MigrateDB2()
+	fmt.Print("ok hhhhh")
 }
