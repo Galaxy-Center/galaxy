@@ -22,7 +22,7 @@ if not exists tasks
 (32) not null comment 'task access typy, includes Kafka, RPC, HTTP',
     executor varchar
 (32) not null comment 'task execute method when expored, e.g. HTTP, RPC',
-    active tinyint
+    actived tinyint
 (1) unsigned not null default '1' comment 'logistic flag',
     created_at bigint unsigned not null comment 'created time',
     created_by varchar

@@ -15,9 +15,9 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-// buildMigration returns *migrate.Migrate if everything is ok. otherwise return specified error.
-func buildMigration() (*migrate.Migrate, error) {
-	var migrationDir = flag.String("migration.files", "./migrations", "Directory where the migration files are located ?")
+// BuildMigration returns *migrate.Migrate if everything is ok. otherwise return specified error.
+func BuildMigration() (*migrate.Migrate, error) {
+	var migrationDir = flag.String("migration.files", "../migrations", "Directory where the migration files are located ?")
 	flag.Parse()
 
 	db, err := sql.Open("mysql", "lance:Lancexu@1992@tcp(localhost:3306)/galaxy_test?charset=utf8mb4&parseTime=true&loc=Local&multiStatements=true")
@@ -46,7 +46,7 @@ func buildMigration() (*migrate.Migrate, error) {
 
 // ExecuteUp execute up migrations.
 func ExecuteUp() {
-	m, err := buildMigration()
+	m, err := BuildMigration()
 	if err != nil {
 		return
 	}
@@ -56,12 +56,18 @@ func ExecuteUp() {
 
 	log.Println("Database migrated")
 
+	if err := m.Drop(); err != nil && err != migrate.ErrNoChange {
+		log.Fatalf("An error occurred while syncing the database... %v", err)
+	}
+
+	log.Println("Database droped")
+
 	os.Exit(0)
 }
 
 // ExecuteDrop deletes everything in the database.
 func ExecuteDrop() {
-	m, err := buildMigration()
+	m, err := BuildMigration()
 	if err != nil {
 		return
 	}

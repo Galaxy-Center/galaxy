@@ -21,7 +21,7 @@ type Task struct {
 	SchedulingCategory string `gorm:"column:scheduling_category" json:"scheduling_category" toml:"scheduling_category" yaml:"scheduling_category"`
 	Assess             string `gorm:"column:assess" json:"assess" toml:"assess" yaml:"assess"`
 	Executor           string `gorm:"column:executor" json:"executor" toml:"executor" yaml:"executor"`
-	Actived            bool   `gorm:"column:actived" json:"active" toml:"active" yaml:"active"`
+	Actived            bool   `gorm:"column:actived" json:"actived" toml:"actived" yaml:"actived"`
 	CreatedAt          uint64 `gorm:"autoCreateTime:nano" json:"created_at" toml:"created_at" yaml:"created_at"`
 	CreatedBy          string `gorm:"column:created_by" json:"created_by,omitempty" toml:"created_by" yaml:"created_by,omitempty"`
 	UpdatedAt          uint64 `gorm:"autoUpdateTime:nano" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
