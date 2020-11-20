@@ -7,13 +7,35 @@ import (
 	"gorm.io/gorm"
 )
 
+// Type defines the type of task.
+type Type int
+
+const (
+	// DELAY_JOB default tasks, usually have a specific excution cycle.
+	DELAY_JOB Type = iota
+	// DELAY_QUEUE queued tasks, this kind of task is usually one-time.
+	DELAY_QUEUE
+)
+
+// Status defines by enum.
+type Status int
+
+const (
+	// PENDING initialization status.
+	PENDING Status = iota
+	// ENABLED wirking status.
+	ENABLED
+	// DISABLED discarded status.
+	DISABLED
+)
+
 // Task is an object representing the database table.
 type Task struct {
 	ID                 uint64 `gorm:"primaryKey,autoIncrement" json:"id" toml:"id" yaml:"id"`
 	Name               string `gorm:"column:name" json:"name" toml:"name" yaml:"name"`
 	Code               string `gorm:"column:code" json:"code" toml:"code" yaml:"code"`
-	Type               string `gorm:"column:type" json:"type" toml:"type" yaml:"type"`
-	Status             string `gorm:"column:status" json:"status" toml:"status" yaml:"status"`
+	Type               Type   `gorm:"column:type" json:"type" toml:"type" yaml:"type"`
+	Status             Status `gorm:"column:status" json:"status" toml:"status" yaml:"status"`
 	ExpiredAt          uint64 `gorm:"column:expired_at" json:"expired_at" toml:"expired_at" yaml:"expired_at"`
 	Cron               string `gorm:"column:cron" json:"cron,omitempty" toml:"cron" yaml:"cron,omitempty"`
 	Timeout            int    `gorm:"column:timeout" json:"timeout" toml:"timeout" yaml:"timeout"`
@@ -77,7 +99,7 @@ func (Task) TableName() string {
 	return "tasks"
 }
 
-// BeforeCreate do somethings, e.g. checks for the necessary fileds.
+// BeforeCreate do somethings, e.g. checks for the necessary fields.
 func (t *Task) BeforeCreate(tx *gorm.DB) (err error) {
 	currTime := uint64(time.Now().UnixNano())
 	if t.CreatedAt <= 0 {
@@ -124,7 +146,7 @@ func Save(task *Task) error {
 }
 
 // Updates updates from specific task that will not updating the zero value
-// fileds to db.
+// fields to db.
 // 只能保存非零字段
 func Updates(task *Task) error {
 	db := galaxyDB.GetDB()
@@ -133,8 +155,8 @@ func Updates(task *Task) error {
 }
 
 // UpdatesFromMap updates from specific task that will not updating the zero value
-// fileds to db.
-// 只能保存非零字段
+// fields to db.
+// 只能保存map包含字段
 func UpdatesFromMap(id uint64, values map[string]interface{}) error {
 	db := galaxyDB.GetDB()
 	err := db.Model(&Task{}).Where("id = ?", id).Updates(values).Error
@@ -144,7 +166,7 @@ func UpdatesFromMap(id uint64, values map[string]interface{}) error {
 // Delete delete permanently. 永久删除
 func Delete(id uint64) error {
 	db := galaxyDB.GetDB()
-	err := db.Where(&Task{}, id).Error
+	err := db.Delete(&Task{}, id).Error
 	return err
 }
 
@@ -159,11 +181,20 @@ func DeleteByActived(id uint64) error {
 func Get(id uint64) (*Task, error) {
 	db := galaxyDB.GetDB()
 	var task Task
-	err := db.First(&task, id).Error
-	if err != nil {
-		return &task, nil
+	if err := db.First(&task, id).Error; err != nil {
+		return nil, err
 	}
-	return nil, err
+	return &task, nil
+}
+
+// GetExcludeInactived returns the task that excludes inactived by specific id.
+func GetExcludeInactived(id uint64) (*Task, error) {
+	db := galaxyDB.GetDB()
+	var task Task
+	if err := db.Where("actived = ?", true).First(&task).Error; err != nil {
+		return nil, err
+	}
+	return &task, nil
 }
 
 // TaskPagination implements of interface PaginationWrapper.
