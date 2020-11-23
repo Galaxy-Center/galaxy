@@ -14,16 +14,11 @@ if not exists tasks
     cron varchar
 (32) default null comment 'cron expressions, refer https://cron.qqe2.com',
     timeout int not null comment 'task execute timeout, unit is seconds',
-    scheduling_type varchar
-(32) not null comment 'scheduling type, e.g. timed task',
     scheduling_category varchar
 (32) not null comment 'scheduling category, e.g. singleton, multiple',
-    assess varchar
-(32) not null comment 'task access typy, includes Kafka, RPC, HTTP',
     executor varchar
 (32) not null comment 'task execute method when expored, e.g. HTTP, RPC',
-    actived tinyint
-(1) unsigned not null default '1' comment 'logistic flag',
+    deleted_at bigint unsigned not null default '0' comment 'deleted time',
     created_at bigint unsigned not null comment 'created time',
     created_by varchar
 (32) default null comment 'created by',

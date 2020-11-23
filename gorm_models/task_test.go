@@ -26,15 +26,13 @@ func TestCreate(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               "JOB",
-		Status:             "ENABLED",
+		Type:               DelayJob,
+		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
-		SchedulingType:     "RPC",
-		SchedulingCategory: "RPC",
-		Assess:             "Assess",
-		Executor:           "Executor",
-		Actived:            true,
+		SchedulingCategory: SINGLETON,
+		Executor:           RPC,
+		DeletedAt:          0,
 		CreatedAt:          uint64(time.Now().UnixNano()),
 		UpdatedAt:          uint64(time.Now().UnixNano()),
 	}
@@ -53,15 +51,13 @@ func TestSave(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               "JOB",
-		Status:             "ENABLED",
+		Type:               DelayJob,
+		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
-		SchedulingType:     "RPC",
-		SchedulingCategory: "RPC",
-		Assess:             "Assess",
-		Executor:           "Executor",
-		Actived:            true,
+		SchedulingCategory: SINGLETON,
+		Executor:           RPC,
+		DeletedAt:          0,
 		CreatedAt:          uint64(time.Now().UnixNano()),
 		UpdatedAt:          uint64(time.Now().UnixNano()),
 	}
@@ -85,15 +81,13 @@ func TestUpdates(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               "JOB",
-		Status:             "ENABLED",
+		Type:               DelayJob,
+		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
-		SchedulingType:     "RPC",
-		SchedulingCategory: "RPC",
-		Assess:             "Assess",
-		Executor:           "Executor",
-		Actived:            true,
+		SchedulingCategory: SINGLETON,
+		Executor:           RPC,
+		DeletedAt:          0,
 		CreatedAt:          uint64(time.Now().UnixNano()),
 		UpdatedAt:          uint64(time.Now().UnixNano()),
 	}
@@ -117,27 +111,25 @@ func TestUpdatesFromMap(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               "JOB",
-		Status:             "ENABLED",
+		Type:               DelayJob,
+		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
-		SchedulingType:     "RPC",
-		SchedulingCategory: "RPC",
-		Assess:             "Assess",
-		Executor:           "Executor",
-		Actived:            true,
+		SchedulingCategory: SINGLETON,
+		Executor:           RPC,
+		DeletedAt:          0,
 		CreatedAt:          uint64(time.Now().UnixNano()),
 		UpdatedAt:          uint64(time.Now().UnixNano()),
 	}
 	Create(task)
 
-	UpdatesFromMap(task.ID, map[string]interface{}{"code": "codeB", "timeout": 0, "actived": false, "expired_at": 0})
+	UpdatesFromMap(task.ID, map[string]interface{}{"code": "codeB", "timeout": 0, "deleted_at": 100, "expired_at": 0})
 
 	tmp, _ := Get(task.ID)
 	assert.NotNil(t, tmp, "tmp should be not null")
 	assert.EqualValues(t, 0, tmp.ExpiredAt, "expired_at error")
 	assert.EqualValues(t, "codeB", tmp.Code, "code error")
-	assert.False(t, tmp.Actived, "actived should is false")
+	assert.EqualValues(t, 100, tmp.DeletedAt, "actived should is false")
 }
 
 func TestDelete(t *testing.T) {
@@ -148,15 +140,13 @@ func TestDelete(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               "JOB",
-		Status:             "ENABLED",
+		Type:               DelayJob,
+		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
-		SchedulingType:     "RPC",
-		SchedulingCategory: "RPC",
-		Assess:             "Assess",
-		Executor:           "Executor",
-		Actived:            true,
+		SchedulingCategory: SINGLETON,
+		Executor:           RPC,
+		DeletedAt:          0,
 		CreatedAt:          uint64(time.Now().UnixNano()),
 		UpdatedAt:          uint64(time.Now().UnixNano()),
 	}
@@ -171,7 +161,7 @@ func TestDelete(t *testing.T) {
 	assert.Nil(t, tmp2, "tmp shoule be null after deleted")
 }
 
-func TestDeleteByActived(t *testing.T) {
+func TestDeleteAt(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
 	defer migrateProvider.Drop(m)
@@ -179,26 +169,24 @@ func TestDeleteByActived(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               "JOB",
-		Status:             "ENABLED",
+		Type:               DelayJob,
+		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
-		SchedulingType:     "RPC",
-		SchedulingCategory: "RPC",
-		Assess:             "Assess",
-		Executor:           "Executor",
-		Actived:            true,
+		SchedulingCategory: SINGLETON,
+		Executor:           RPC,
+		DeletedAt:          0,
 		CreatedAt:          uint64(time.Now().UnixNano()),
 		UpdatedAt:          uint64(time.Now().UnixNano()),
 	}
 	Create(task)
 
-	tmp, _ := GetExcludeInactived(task.ID)
+	tmp, _ := GetExcludeDeleted(task.ID)
 	assert.NotNil(t, tmp, "tmp should be not null")
 
-	DeleteByActived(task.ID)
+	DeleteAt(task.ID)
 
-	tmp2, _ := GetExcludeInactived(task.ID)
+	tmp2, _ := GetExcludeDeleted(task.ID)
 	assert.Nil(t, tmp2, "tmp should be null after deleted")
 }
 
@@ -211,18 +199,32 @@ func TestPaginateQuery(t *testing.T) {
 		task := &Task{
 			Name:               "test" + strconv.Itoa(i),
 			Code:               "code" + strconv.Itoa(i),
-			Type:               "JOB",
-			Status:             "ENABLED",
+			Type:               DelayJob,
+			Status:             ENABLED,
 			ExpiredAt:          uint64(100 * (i + 1)),
 			Timeout:            3600 + (i * 100),
-			SchedulingType:     "RPC",
-			SchedulingCategory: "RPC",
-			Assess:             "Assess",
-			Executor:           "Executor",
-			Actived:            true,
+			SchedulingCategory: SINGLETON,
+			Executor:           RPC,
 			CreatedAt:          uint64(time.Now().UnixNano()),
 			UpdatedAt:          uint64(time.Now().UnixNano()),
 		}
+		if i == 9 {
+			task.DeletedAt = 900
+		} else {
+			task.DeletedAt = 0
+		}
+		if i%3 == 0 {
+			task.Executor = RPC
+		} else if i%3 == 1 {
+			task.Executor = KAFKA
+		} else {
+			task.Executor = HTTP
+		}
 		Create(task)
 	}
+
+	var pagination PaginationWrapper
+	p := new(TaskPagination)
+
+	PaginateQuery(pagination)
 }

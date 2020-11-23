@@ -11,10 +11,10 @@ import (
 type Type int
 
 const (
-	// DELAY_JOB default tasks, usually have a specific excution cycle.
-	DELAY_JOB Type = iota
-	// DELAY_QUEUE queued tasks, this kind of task is usually one-time.
-	DELAY_QUEUE
+	// DelayJob default tasks, usually have a specific excution cycle.
+	DelayJob Type = iota
+	// DelayQueue queued tasks, this kind of task is usually one-time.
+	DelayQueue
 )
 
 // Status defines by enum.
@@ -29,25 +29,45 @@ const (
 	DISABLED
 )
 
+// SchedulingCategory categories.
+type SchedulingCategory int
+
+const (
+	// SINGLETON scheduling one node.
+	SINGLETON SchedulingCategory = iota
+	// MULTIPLE scheduling more nodes.
+	MULTIPLE
+)
+
+// Executor defines.
+type Executor int
+
+const (
+	// KAFKA from kafka
+	KAFKA Executor = iota
+	// RPC from rpc service
+	RPC
+	// HTTP from http app
+	HTTP
+)
+
 // Task is an object representing the database table.
 type Task struct {
-	ID                 uint64 `gorm:"primaryKey,autoIncrement" json:"id" toml:"id" yaml:"id"`
-	Name               string `gorm:"column:name" json:"name" toml:"name" yaml:"name"`
-	Code               string `gorm:"column:code" json:"code" toml:"code" yaml:"code"`
-	Type               Type   `gorm:"column:type" json:"type" toml:"type" yaml:"type"`
-	Status             Status `gorm:"column:status" json:"status" toml:"status" yaml:"status"`
-	ExpiredAt          uint64 `gorm:"column:expired_at" json:"expired_at" toml:"expired_at" yaml:"expired_at"`
-	Cron               string `gorm:"column:cron" json:"cron,omitempty" toml:"cron" yaml:"cron,omitempty"`
-	Timeout            int    `gorm:"column:timeout" json:"timeout" toml:"timeout" yaml:"timeout"`
-	SchedulingType     string `gorm:"column:scheduling_type" json:"scheduling_type" toml:"scheduling_type" yaml:"scheduling_type"`
-	SchedulingCategory string `gorm:"column:scheduling_category" json:"scheduling_category" toml:"scheduling_category" yaml:"scheduling_category"`
-	Assess             string `gorm:"column:assess" json:"assess" toml:"assess" yaml:"assess"`
-	Executor           string `gorm:"column:executor" json:"executor" toml:"executor" yaml:"executor"`
-	Actived            bool   `gorm:"column:actived" json:"actived" toml:"actived" yaml:"actived"`
-	CreatedAt          uint64 `gorm:"autoCreateTime:nano" json:"created_at" toml:"created_at" yaml:"created_at"`
-	CreatedBy          string `gorm:"column:created_by" json:"created_by,omitempty" toml:"created_by" yaml:"created_by,omitempty"`
-	UpdatedAt          uint64 `gorm:"autoUpdateTime:nano" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
-	UpdatedBy          string `gorm:"column:updated_by" json:"updated_by,omitempty" toml:"updated_by" yaml:"updated_by,omitempty"`
+	ID                 uint64             `gorm:"primaryKey,autoIncrement" json:"id" toml:"id" yaml:"id"`
+	Name               string             `gorm:"column:name" json:"name" toml:"name" yaml:"name"`
+	Code               string             `gorm:"column:code" json:"code" toml:"code" yaml:"code"`
+	Type               Type               `gorm:"column:type" json:"type" toml:"type" yaml:"type"`
+	Status             Status             `gorm:"column:status" json:"status" toml:"status" yaml:"status"`
+	ExpiredAt          uint64             `gorm:"column:expired_at" json:"expired_at" toml:"expired_at" yaml:"expired_at"`
+	Cron               string             `gorm:"column:cron" json:"cron,omitempty" toml:"cron" yaml:"cron,omitempty"`
+	Timeout            int                `gorm:"column:timeout" json:"timeout" toml:"timeout" yaml:"timeout"`
+	SchedulingCategory SchedulingCategory `gorm:"column:scheduling_category" json:"scheduling_category" toml:"scheduling_category" yaml:"scheduling_category"`
+	Executor           Executor           `gorm:"column:executor" json:"executor" toml:"executor" yaml:"executor"`
+	DeletedAt          uint64             `gorm:"column:deleted_at" json:"deleted_at" toml:"deleted_at" yaml:"deleted_at"`
+	CreatedAt          uint64             `gorm:"autoCreateTime:nano" json:"created_at" toml:"created_at" yaml:"created_at"`
+	CreatedBy          string             `gorm:"column:created_by" json:"created_by,omitempty" toml:"created_by" yaml:"created_by,omitempty"`
+	UpdatedAt          uint64             `gorm:"autoUpdateTime:nano" json:"updated_at" toml:"updated_at" yaml:"updated_at"`
+	UpdatedBy          string             `gorm:"column:updated_by" json:"updated_by,omitempty" toml:"updated_by" yaml:"updated_by,omitempty"`
 }
 
 // TaskColumns table field name.
@@ -60,11 +80,9 @@ var TaskColumns = struct {
 	ExpiredAt          string
 	Cron               string
 	Timeout            string
-	SchedulingType     string
 	SchedulingCategory string
-	Assess             string
 	Executor           string
-	Actived            string
+	DeletedAt          string
 	CreatedAt          string
 	CreatedBy          string
 	UpdatedAt          string
@@ -78,11 +96,9 @@ var TaskColumns = struct {
 	ExpiredAt:          "expired_at",
 	Cron:               "cron",
 	Timeout:            "timeout",
-	SchedulingType:     "scheduling_type",
 	SchedulingCategory: "scheduling_category",
-	Assess:             "assess",
 	Executor:           "executor",
-	Actived:            "actived",
+	DeletedAt:          "deleted_at",
 	CreatedAt:          "created_at",
 	CreatedBy:          "created_by",
 	UpdatedAt:          "updated_at",
@@ -170,10 +186,10 @@ func Delete(id uint64) error {
 	return err
 }
 
-// DeleteByActived delete softly. 软删除
-func DeleteByActived(id uint64) error {
+// DeleteAt delete softly. 软删除
+func DeleteAt(id uint64) error {
 	db := galaxyDB.GetDB()
-	err := db.Model(&Task{}).Where("id = ?", id).Update("actived", false).Error
+	err := db.Model(&Task{}).Where("id = ?", id).Update("deleted_at", time.Now().UnixNano()).Error
 	return err
 }
 
@@ -187,11 +203,11 @@ func Get(id uint64) (*Task, error) {
 	return &task, nil
 }
 
-// GetExcludeInactived returns the task that excludes inactived by specific id.
-func GetExcludeInactived(id uint64) (*Task, error) {
+// GetExcludeDeleted returns the task that excludes inactived by specific id.
+func GetExcludeDeleted(id uint64) (*Task, error) {
 	db := galaxyDB.GetDB()
 	var task Task
-	if err := db.Where("actived = ?", true).First(&task).Error; err != nil {
+	if err := db.Where("deleted_at = ?", 0).First(&task).Error; err != nil {
 		return nil, err
 	}
 	return &task, nil

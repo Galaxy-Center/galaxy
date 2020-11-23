@@ -62,7 +62,7 @@ func Attach(c Condition) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		tx := db.Where("created_at BETWEEN ? AND ?", c.From, c.To)
 		if c.ExlcudeInactived {
-			tx = tx.Where("actived = ?", true)
+			tx = tx.Where("actived = ?", 0)
 		}
 		for k, v := range c.Attachment {
 			switch t := v.(type) {
