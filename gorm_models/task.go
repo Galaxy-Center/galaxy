@@ -220,13 +220,21 @@ type TaskPagination struct {
 }
 
 // Pagination returns the pagination of current query probe(查询探针).
-func (tp TaskPagination) Pagination() *Pagination {
+func (tp *TaskPagination) Pagination() *Pagination {
 	return &tp.Page
 }
 
 // Attachment returns attached info.
-func (tp TaskPagination) Attachment() map[string]interface{} {
-	return tp.Conditions
+func (tp *TaskPagination) Attachment() Condition {
+	var c Condition
+	c.From = (tp.Page.Page - 1) * tp.Page.PageSize
+	c.To = tp.Page.Page * tp.Page.PageSize
+	if tp.Conditions["excludeInactived"] == true {
+		c.ExlcudeInactived = true
+		tp.Conditions["excludeInactived"] = nil
+	}
+	c.Attachment = tp.Conditions
+	return c
 }
 
 // PaginateQuery todo

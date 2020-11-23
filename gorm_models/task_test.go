@@ -223,8 +223,11 @@ func TestPaginateQuery(t *testing.T) {
 		Create(task)
 	}
 
-	var pagination PaginationWrapper
 	p := new(TaskPagination)
+	p.Page.Page = 1
+	p.Page.PageSize = 10
+	p.Conditions["exculdeDeleted"] = true
 
-	PaginateQuery(pagination)
+	res, _ := PaginateQuery(p)
+	assert.NotNil(t, res, "res should not null")
 }
