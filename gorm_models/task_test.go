@@ -99,8 +99,8 @@ func TestUpdates(t *testing.T) {
 
 	tmp, _ := Get(task.ID)
 	assert.NotNil(t, tmp, "tmp should be not null")
-	assert.EqualValues(t, 100, tmp.ExpiredAt)
-	assert.EqualValues(t, "codeA", tmp.Code)
+	assert.EqualValues(t, 100, tmp.ExpiredAt, "expiredAt error")
+	assert.EqualValues(t, "codeA", tmp.Code, "code error")
 }
 
 func TestUpdatesFromMap(t *testing.T) {
@@ -233,4 +233,6 @@ func TestPaginateQuery(t *testing.T) {
 
 	res, _ := PaginateQuery(p)
 	assert.NotNil(t, res, "res should not null")
+	assert.EqualValues(t, res.Total, 1, "total error")
+	assert.EqualValues(t, res.Data.([]Task)[0].ID, uint64(6), "ID error")
 }
