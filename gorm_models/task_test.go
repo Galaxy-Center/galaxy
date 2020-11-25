@@ -224,9 +224,13 @@ func TestPaginateQuery(t *testing.T) {
 	}
 
 	p := new(TaskPagination)
-	p.Page.Page = 1
-	p.Page.PageSize = 10
-	p.Conditions["exculdeDeleted"] = true
+	p.Page.SetPage(1)
+	p.Page.SetPageSize(10)
+	p.Conditions = Attachment{}
+	p.Conditions[PaginationColumns.Deleted] = true
+	p.Conditions[PaginationColumns.From] = uint64(0)
+	p.Conditions[PaginationColumns.To] = uint64(time.Now().UnixNano())
+	p.Conditions["code"] = "code5"
 
 	res, _ := PaginateQuery(p)
 	assert.NotNil(t, res, "res should not null")

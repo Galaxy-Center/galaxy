@@ -216,7 +216,7 @@ func GetExcludeDeleted(id uint64) (*Task, error) {
 // TaskPagination implements of interface PaginationWrapper.
 type TaskPagination struct {
 	Page       Pagination
-	Conditions map[string]interface{}
+	Conditions Attachment
 }
 
 // Pagination returns the pagination of current query probe(查询探针).
@@ -227,30 +227,38 @@ func (tp *TaskPagination) Pagination() *Pagination {
 // Attachment returns attached info.
 func (tp *TaskPagination) Attachment() Condition {
 	var c Condition
-	c.From = (tp.Page.Page - 1) * tp.Page.PageSize
-	c.To = tp.Page.Page * tp.Page.PageSize
-	if tp.Conditions["excludeInactived"] == true {
-		c.ExlcudeInactived = true
-		tp.Conditions["excludeInactived"] = nil
+	if v, ok := tp.Conditions[PaginationColumns.From]; ok {
+		c.SetFrom(v.(uint64))
+		delete(tp.Conditions, PaginationColumns.From)
 	}
-	c.Attachment = tp.Conditions
+	if v, ok := tp.Conditions[PaginationColumns.To]; ok {
+		c.SetTo(v.(uint64))
+		delete(tp.Conditions, PaginationColumns.To)
+	}
+	if tp.Conditions[PaginationColumns.Deleted] == true {
+		c.SetExcludeInactived(true)
+		delete(tp.Conditions, PaginationColumns.Deleted)
+	}
+	c.attachment = tp.Conditions
 	return c
 }
 
 // PaginateQuery todo
 func PaginateQuery(pw PaginationWrapper) (Response, error) {
 	var response Response
-	response.Page = pw.Pagination().Page
+	response.Page = pw.Pagination().GetPage()
 
 	db := galaxyDB.GetDB()
 
 	var total int64
-	db.Scopes(Attach(pw.Attachment())).Count(&total)
+	attached := Attach(pw.Attachment())
+
+	db.Model(&Task{}).Scopes(attached).Count(&total)
 	response.Total = int(total)
-	response.TotalPage = int(total)/pw.Pagination().PageSize + 1
+	response.TotalPage = int(total)/pw.Pagination().GetPageSize() + 1
 
 	var tasks []Task
-	db.Scopes(Attach(pw.Attachment()), Paginate(pw.Pagination())).Find(&tasks)
+	db.Scopes(attached, Paginate(pw.Pagination())).Find(&tasks)
 	response.Data = tasks
 
 	return response, nil

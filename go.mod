@@ -12,6 +12,8 @@ require (
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/google/go-dap v0.3.0 // indirect
+	github.com/iancoleman/strcase v0.1.2 // indirect
+	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kat-co/vala v0.0.0-20170210184112-42e1d8b61f12
 	github.com/magiconair/properties v1.8.2 // indirect
@@ -20,6 +22,7 @@ require (
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/pelletier/go-toml v1.8.0 // indirect
 	github.com/peterh/liner v1.2.0 // indirect
+	github.com/pilagod/gorm-cursor-paginator v1.3.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/afero v1.3.5 // indirect
