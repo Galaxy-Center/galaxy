@@ -228,8 +228,7 @@ func TestPaginateQuery(t *testing.T) {
 	p.Page.SetPageSize(10)
 	p.Conditions = Attachment{}
 	p.Conditions[PaginationColumns.Deleted] = true
-	p.Conditions[PaginationColumns.From] = uint64(0)
-	p.Conditions[PaginationColumns.To] = uint64(time.Now().UnixNano())
+	p.Conditions[PaginationColumns.TimeRange] = NewUint64Range(uint64(0), uint64(time.Now().UnixNano()))
 	p.Conditions["code"] = "code5"
 
 	res, _ := PaginateQuery(p)

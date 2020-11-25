@@ -1,6 +1,8 @@
-package utils
+package models
 
 import (
+	"time"
+
 	log "github.com/sirupsen/logrus"
 )
 
@@ -10,25 +12,30 @@ type Uint64Range struct {
 	right uint64
 }
 
-// SetValues setter of left and right.
-func (r *Uint64Range) SetValues(left, right uint64) {
+// NewUint64Range setter of left and right.
+func NewUint64Range(left, right uint64) Uint64Range {
 	if left > right {
 		log.Panic("time range left {} should less than right {}", left, right)
 	}
-	r.left = left
-	r.right = right
+	return Uint64Range{
+		left:  left,
+		right: right,
+	}
 }
 
 // GetLeft gtter of left.
 func (r *Uint64Range) GetLeft() uint64 {
-	if r.GetLeft() < 0 {
+	if r.left < 0 {
 		return 0
 	}
-	return r.GetLeft()
+	return r.left
 }
 
 // GetRight getter of right.
 func (r *Uint64Range) GetRight() uint64 {
+	if r.right <= 0 {
+		return uint64(time.Now().UnixNano())
+	}
 	return r.right
 }
 
@@ -71,3 +78,12 @@ type Collection struct {
 
 // Attachment alias of map[string]interface{}
 type Attachment map[string]interface{}
+
+// PaginationColumns defines all columns var for orm pagination.
+var PaginationColumns = struct {
+	Deleted   string
+	TimeRange string
+}{
+	Deleted:   "excludeInactived",
+	TimeRange: "timeRange",
+}

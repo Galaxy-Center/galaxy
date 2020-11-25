@@ -227,13 +227,9 @@ func (tp *TaskPagination) Pagination() *Pagination {
 // Attachment returns attached info.
 func (tp *TaskPagination) Attachment() Condition {
 	var c Condition
-	if v, ok := tp.Conditions[PaginationColumns.From]; ok {
-		c.SetFrom(v.(uint64))
-		delete(tp.Conditions, PaginationColumns.From)
-	}
-	if v, ok := tp.Conditions[PaginationColumns.To]; ok {
-		c.SetTo(v.(uint64))
-		delete(tp.Conditions, PaginationColumns.To)
+	if v, ok := tp.Conditions[PaginationColumns.TimeRange]; ok {
+		c.SetTimeRange(v.(Uint64Range))
+		delete(tp.Conditions, PaginationColumns.TimeRange)
 	}
 	if tp.Conditions[PaginationColumns.Deleted] == true {
 		c.SetExcludeInactived(true)

@@ -77,17 +77,6 @@ type PaginationWrapper interface {
 	Attachment() Condition
 }
 
-// PaginationColumns defines all columns var for orm pagination.
-var PaginationColumns = struct {
-	Deleted string
-	From    string
-	To      string
-}{
-	Deleted: "excludeInactived",
-	From:    "created_at_from",
-	To:      "created_at_to",
-}
-
 // Paginate returns a func with paging infomation.
 // Ideally, the func includes: offset, limit, created_at, actived.
 func Paginate(p *Pagination) func(db *gorm.DB) *gorm.DB {
