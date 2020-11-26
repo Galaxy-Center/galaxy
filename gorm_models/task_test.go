@@ -224,15 +224,16 @@ func TestPaginateQuery(t *testing.T) {
 	}
 
 	p := new(TaskPagination)
-	p.Page.SetPage(1)
-	p.Page.SetPageSize(10)
-	p.Conditions = Attachment{}
-	p.Conditions[PaginationColumns.Deleted] = true
-	p.Conditions[PaginationColumns.TimeRange] = NewUint64Range(uint64(0), uint64(time.Now().UnixNano()))
-	p.Conditions["code"] = "code5"
+	p.page.SetPage(1)
+	p.page.SetPageSize(10)
+	p.conditions = Attachment{}
+	p.conditions[PaginationColumns.Deleted] = true
+	p.conditions[PaginationColumns.TimeRange] = NewUint64Range(uint64(0), uint64(time.Now().UnixNano()))
+	p.conditions["code"] = "code5"
 
 	res, _ := PaginateQuery(p)
 	assert.NotNil(t, res, "res should not null")
 	assert.EqualValues(t, res.Total, 1, "total error")
 	assert.EqualValues(t, res.Data.([]Task)[0].ID, uint64(6), "ID error")
 }
+

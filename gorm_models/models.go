@@ -123,3 +123,4 @@ func Attach(c Condition) func(db *gorm.DB) *gorm.DB {
 		return tx
 	}
 }
+

@@ -41,9 +41,18 @@ func (r *Uint64Range) GetRight() uint64 {
 
 // Condition builder the model query limit conditions.
 type Condition struct {
+	order            string
 	timeRange        Uint64Range
 	exlcudeInactived bool
 	attachment       Attachment
+}
+
+// GetAttachmentOrNil returns (interface{}, bool) pair of key.
+func (c *Condition) GetAttachmentOrNil(k string) (interface{}, bool) {
+	if v, ok := c.attachment[k]; ok {
+		return v, true
+	}
+	return nil, false
 }
 
 // SetTimeRange setter includes from, to.
@@ -87,3 +96,4 @@ var PaginationColumns = struct {
 	Deleted:   "excludeInactived",
 	TimeRange: "timeRange",
 }
+

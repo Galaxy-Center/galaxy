@@ -215,27 +215,27 @@ func GetExcludeDeleted(id uint64) (*Task, error) {
 
 // TaskPagination implements of interface PaginationWrapper.
 type TaskPagination struct {
-	Page       Pagination
-	Conditions Attachment
+	page       Pagination
+	conditions Attachment
 }
 
 // Pagination returns the pagination of current query probe(查询探针).
 func (tp *TaskPagination) Pagination() *Pagination {
-	return &tp.Page
+	return &tp.page
 }
 
 // Attachment returns attached info.
 func (tp *TaskPagination) Attachment() Condition {
 	var c Condition
-	if v, ok := tp.Conditions[PaginationColumns.TimeRange]; ok {
+	if v, ok := tp.conditions[PaginationColumns.TimeRange]; ok {
 		c.SetTimeRange(v.(Uint64Range))
-		delete(tp.Conditions, PaginationColumns.TimeRange)
+		delete(tp.conditions, PaginationColumns.TimeRange)
 	}
-	if tp.Conditions[PaginationColumns.Deleted] == true {
+	if tp.conditions[PaginationColumns.Deleted] == true {
 		c.SetExcludeInactived(true)
-		delete(tp.Conditions, PaginationColumns.Deleted)
+		delete(tp.conditions, PaginationColumns.Deleted)
 	}
-	c.attachment = tp.Conditions
+	c.attachment = tp.conditions
 	return c
 }
 
@@ -259,3 +259,4 @@ func PaginateQuery(pw PaginationWrapper) (Response, error) {
 
 	return response, nil
 }
+
