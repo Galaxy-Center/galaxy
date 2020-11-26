@@ -1,12 +1,18 @@
+// Galaxy app support by Golang.
 package main
 
 import (
 	"net/http"
 	"time"
 
+	logger "github.com/galaxy-center/galaxy/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	log "github.com/sirupsen/logrus"
+)
+
+var (
+	log    = logger.Get()
+	rawLog = logger.GetRaw()
 )
 
 func main() {
@@ -21,4 +27,3 @@ func main() {
 	})
 	router.Run(":8080")
 }
-
