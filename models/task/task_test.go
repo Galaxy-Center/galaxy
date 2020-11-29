@@ -1,4 +1,4 @@
-package models
+package task
 
 import (
 	"os"
@@ -8,6 +8,7 @@ import (
 
 	db "github.com/galaxy-center/galaxy/lifecycle"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
+	models "github.com/galaxy-center/galaxy/models"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -223,17 +224,16 @@ func TestPaginateQuery(t *testing.T) {
 		Create(task)
 	}
 
-	p := new(TaskPagination)
-	p.page.SetPage(1)
-	p.page.SetPageSize(10)
-	p.conditions = Attachment{}
-	p.conditions[PaginationColumns.Deleted] = true
-	p.conditions[PaginationColumns.TimeRange] = NewUint64Range(uint64(0), uint64(time.Now().UnixNano()))
-	p.conditions["code"] = "code5"
+	p := new(models.Pagination)
+	p.SetPage(1)
+	p.SetPageSize(10)
+	p.SetAttachment(models.Attachment{})
+	p.GetAttachment()[models.PaginationColumns.Deleted] = true
+	p.GetAttachment()[models.PaginationColumns.TimeRange] = models.Uint64Range{}.Default()
+	p.GetAttachment()["code"] = "code5"
 
 	res, _ := PaginateQuery(p)
 	assert.NotNil(t, res, "res should not null")
 	assert.EqualValues(t, res.Total, 1, "total error")
 	assert.EqualValues(t, res.Data.([]Task)[0].ID, uint64(6), "ID error")
 }
-

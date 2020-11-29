@@ -23,8 +23,28 @@ const (
 
 // Pagination builder the info of paginate.
 type Pagination struct {
-	pageSize int
-	page     int
+	pageSize   int
+	page       int
+	attachment Attachment
+}
+
+// BuildCondition builder func of condition.
+func (p *Pagination) BuildCondition() *Condition {
+	var c Condition
+	for k, v := range p.attachment {
+		if k == PaginationColumns.TimeRange {
+			c.SetTimeRange(v.(Uint64Range))
+			delete(p.attachment, k)
+			continue
+		}
+		if k == PaginationColumns.Deleted && v == true {
+			c.SetExcludeInactived(true)
+			delete(p.attachment, k)
+			continue
+		}
+	}
+	c.SetAttachment(p.attachment)
+	return &c
 }
 
 // NewPagination returns default obj of Pagination.
@@ -63,18 +83,22 @@ func (p *Pagination) GetPage() int {
 	return p.page
 }
 
+// SetAttachment setter of attachment.
+func (p *Pagination) SetAttachment(a Attachment) {
+	p.attachment = a
+}
+
+// GetAttachment getter of attachment.
+func (p *Pagination) GetAttachment() Attachment {
+	return p.attachment
+}
+
 // Response wrapper the pagination result.
 type Response struct {
 	Page      int
 	TotalPage int
 	Total     int
 	Data      interface{}
-}
-
-// PaginationWrapper abstract interface wrapper of pagination infos confition.
-type PaginationWrapper interface {
-	Pagination() *Pagination
-	Attachment() Condition
 }
 
 // Paginate returns a func with paging infomation.
@@ -97,7 +121,7 @@ func Paginate(p *Pagination) func(db *gorm.DB) *gorm.DB {
 
 // Attach returns the attached db with input condition.
 // Note: will attach fields by go interface assertion.
-func Attach(c Condition) func(db *gorm.DB) *gorm.DB {
+func Attach(c *Condition) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		tx := db.Where("created_at BETWEEN ? AND ?", c.GetFrom(), c.GetTo())
 		if c.IsExcludeInactived() {
@@ -123,4 +147,3 @@ func Attach(c Condition) func(db *gorm.DB) *gorm.DB {
 		return tx
 	}
 }
-

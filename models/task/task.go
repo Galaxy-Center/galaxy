@@ -1,9 +1,10 @@
-package models
+package task
 
 import (
 	"time"
 
 	galaxyDB "github.com/galaxy-center/galaxy/lifecycle"
+	models "github.com/galaxy-center/galaxy/models"
 	"gorm.io/gorm"
 )
 
@@ -213,50 +214,23 @@ func GetExcludeDeleted(id uint64) (*Task, error) {
 	return &task, nil
 }
 
-// TaskPagination implements of interface PaginationWrapper.
-type TaskPagination struct {
-	page       Pagination
-	conditions Attachment
-}
-
-// Pagination returns the pagination of current query probe(查询探针).
-func (tp *TaskPagination) Pagination() *Pagination {
-	return &tp.page
-}
-
-// Attachment returns attached info.
-func (tp *TaskPagination) Attachment() Condition {
-	var c Condition
-	if v, ok := tp.conditions[PaginationColumns.TimeRange]; ok {
-		c.SetTimeRange(v.(Uint64Range))
-		delete(tp.conditions, PaginationColumns.TimeRange)
-	}
-	if tp.conditions[PaginationColumns.Deleted] == true {
-		c.SetExcludeInactived(true)
-		delete(tp.conditions, PaginationColumns.Deleted)
-	}
-	c.attachment = tp.conditions
-	return c
-}
-
 // PaginateQuery todo
-func PaginateQuery(pw PaginationWrapper) (Response, error) {
-	var response Response
-	response.Page = pw.Pagination().GetPage()
+func PaginateQuery(p *models.Pagination) (models.Response, error) {
+	var response models.Response
+	response.Page = p.GetPage()
 
 	db := galaxyDB.GetDB()
 
 	var total int64
-	attached := Attach(pw.Attachment())
+	attached := models.Attach(p.BuildCondition())
 
 	db.Model(&Task{}).Scopes(attached).Count(&total)
 	response.Total = int(total)
-	response.TotalPage = int(total)/pw.Pagination().GetPageSize() + 1
+	response.TotalPage = int(total)/p.GetPageSize() + 1
 
 	var tasks []Task
-	db.Scopes(attached, Paginate(pw.Pagination())).Find(&tasks)
+	db.Scopes(attached, models.Paginate(p)).Find(&tasks)
 	response.Data = tasks
 
 	return response, nil
 }
-

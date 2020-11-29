@@ -3,9 +3,11 @@ package migrate
 
 import (
 	"fmt"
+
 	log "github.com/sirupsen/logrus"
 
 	"database/sql"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/mysql"
@@ -29,7 +31,7 @@ func BuildMigration() (*migrate.Migrate, error) {
 		log.Fatalf("couldn't not start sql migration... %v", err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		fmt.Sprintf("file://%s", "../migrations"),
+		fmt.Sprintf("file://%s", "../migrationfiles"),
 		"mysql",
 		driver,
 	)

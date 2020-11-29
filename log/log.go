@@ -21,7 +21,7 @@ var (
 // flattened: `foo.bar: baz`
 func LoadTranslations(thing map[string]interface{}) {
 	formatter := new(prefixed.TextFormatter)
-	formatter.TimestampFormat = `2020-11-26 19:04:05`
+	formatter.TimestampFormat = `2006-01-02 15:04:05`
 	formatter.FullTimestamp = true
 	log.Formatter = &TranslationFormatter{formatter}
 	translations, _ = Flatten(thing)
@@ -42,7 +42,7 @@ func (f *RawFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 
 func init() {
 	formatter := new(prefixed.TextFormatter)
-	formatter.TimestampFormat = `2020-11-26 19:04:05`
+	formatter.TimestampFormat = `2006-01-02 15:04:05`
 	formatter.FullTimestamp = true
 
 	log.Formatter = formatter
