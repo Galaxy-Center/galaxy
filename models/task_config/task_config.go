@@ -43,6 +43,16 @@ var TaskConfigColumns = struct {
 	UpdatedBy: "updated_by",
 }
 
+// Tabler defines the table name.
+type Tabler interface {
+	TableName() string
+}
+
+// TableName 会将 User 的表名重写为 `profiles`
+func (TaskConfig) TableName() string {
+	return "task_configs"
+}
+
 // AfterCreate do somethings, e.g. debug log.
 func (t *TaskConfig) AfterCreate(tx *gorm.DB) (err error) {
 	// nothing doing

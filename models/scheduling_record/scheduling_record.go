@@ -60,6 +60,16 @@ var SchedulingRecordColumns = struct {
 	UpdatedBy: "updated_by",
 }
 
+// Tabler defines the table name.
+type Tabler interface {
+	TableName() string
+}
+
+// TableName 会将 SchedulingRecord 的表名重写为 `scheduling_records`
+func (SchedulingRecord) TableName() string {
+	return "scheduling_records"
+}
+
 // AfterCreate do somethings, e.g. debug log.
 func (r *SchedulingRecord) AfterCreate(tx *gorm.DB) (err error) {
 	// nothing doing
