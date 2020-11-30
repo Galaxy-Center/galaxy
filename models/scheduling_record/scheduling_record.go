@@ -15,13 +15,13 @@ const (
 	// NEW the record initialized status.
 	NEW Status = "NEW"
 	// RUNNABLE NEW->RUNNABLE / RUNNING->RUNNABLE.
-	RUNNABLE Status = "RUNNABLE"
+	RUNNABLE = "RUNNABLE"
 	// RUNNING RUNNABLE->RUNNING / RUNNING->RUNNABLE/ RUNNING -> FINISHED / RUNNING->FAILED.
-	RUNNING Status = "RUNNING"
+	RUNNING = "RUNNING"
 	// FINISHED RUNNING->FINISHED.
-	FINISHED Status = "FINISHED"
+	FINISHED = "FINISHED"
 	// FAILED RUNNING->FAILED.
-	FAILED Status = "FAILED"
+	FAILED = "FAILED"
 )
 
 // SchedulingRecord is an object representing the database table.

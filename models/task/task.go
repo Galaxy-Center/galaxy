@@ -9,47 +9,47 @@ import (
 )
 
 // Type defines the type of task.
-type Type int
+type Type string
 
 const (
 	// DelayJob default tasks, usually have a specific excution cycle.
-	DelayJob Type = iota
+	DelayJob Type = "DelayJob"
 	// DelayQueue queued tasks, this kind of task is usually one-time.
-	DelayQueue
+	DelayQueue = "DelayQueue"
 )
 
 // Status defines by enum.
-type Status int
+type Status string
 
 const (
 	// PENDING initialization status.
-	PENDING Status = iota
+	PENDING Status = "PENDING"
 	// ENABLED wirking status.
-	ENABLED
+	ENABLED = "ENABLED"
 	// DISABLED discarded status.
-	DISABLED
+	DISABLED = "DISABLED"
 )
 
 // SchedulingCategory categories.
-type SchedulingCategory int
+type SchedulingCategory string
 
 const (
 	// SINGLETON scheduling one node.
-	SINGLETON SchedulingCategory = iota
+	SINGLETON SchedulingCategory = "SINGLETON"
 	// MULTIPLE scheduling more nodes.
-	MULTIPLE
+	MULTIPLE = "MULTIPLE"
 )
 
 // Executor defines.
-type Executor int
+type Executor string
 
 const (
 	// KAFKA from kafka
-	KAFKA Executor = iota
+	KAFKA Executor = "KAFKA"
 	// RPC from rpc service
-	RPC
+	RPC = "RPC"
 	// HTTP from http app
-	HTTP
+	HTTP = "HTTP"
 )
 
 // Task is an object representing the database table.
@@ -57,7 +57,7 @@ type Task struct {
 	ID                 uint64             `gorm:"primaryKey,autoIncrement" json:"id" toml:"id" yaml:"id"`
 	Name               string             `gorm:"column:name" json:"name" toml:"name" yaml:"name"`
 	Code               string             `gorm:"column:code" json:"code" toml:"code" yaml:"code"`
-	Type               Type               `gorm:"column:type" json:"type" toml:"type" yaml:"type"`
+	Type               Type               `gorm:"embedded,column:type" json:"type" toml:"type" yaml:"type"`
 	Status             Status             `gorm:"column:status" json:"status" toml:"status" yaml:"status"`
 	ExpiredAt          uint64             `gorm:"column:expired_at" json:"expired_at" toml:"expired_at" yaml:"expired_at"`
 	Cron               string             `gorm:"column:cron" json:"cron,omitempty" toml:"cron" yaml:"cron,omitempty"`

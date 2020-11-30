@@ -27,7 +27,7 @@ func TestCreate(t *testing.T) {
 	task := &Task{
 		Name:               "test",
 		Code:               "codeA",
-		Type:               DelayJob,
+		Type:               DelayQueue,
 		Status:             ENABLED,
 		ExpiredAt:          100,
 		Timeout:            3600,
