@@ -12,6 +12,7 @@ require (
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/google/go-dap v0.3.0 // indirect
+	github.com/google/martian v2.1.0+incompatible
 	github.com/iancoleman/strcase v0.1.2 // indirect
 	github.com/jinzhu/gorm v1.9.16 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect

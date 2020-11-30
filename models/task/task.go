@@ -208,7 +208,7 @@ func Get(id uint64) (*Task, error) {
 func GetExcludeDeleted(id uint64) (*Task, error) {
 	db := galaxyDB.GetDB()
 	var task Task
-	if err := db.Where("deleted_at = ?", 0).First(&task).Error; err != nil {
+	if err := db.Where("id = ?", id).Where("deleted_at = ?", 0).First(&task).Error; err != nil {
 		return nil, err
 	}
 	return &task, nil

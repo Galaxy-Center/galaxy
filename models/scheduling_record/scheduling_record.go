@@ -9,19 +9,19 @@ import (
 )
 
 // Status new->runnable->running->finished/failed
-type Status int
+type Status string
 
 const (
 	// NEW the record initialized status.
-	NEW Status = iota
+	NEW Status = "NEW"
 	// RUNNABLE NEW->RUNNABLE / RUNNING->RUNNABLE.
-	RUNNABLE
+	RUNNABLE Status = "RUNNABLE"
 	// RUNNING RUNNABLE->RUNNING / RUNNING->RUNNABLE/ RUNNING -> FINISHED / RUNNING->FAILED.
-	RUNNING
+	RUNNING Status = "RUNNING"
 	// FINISHED RUNNING->FINISHED.
-	FINISHED
+	FINISHED Status = "FINISHED"
 	// FAILED RUNNING->FAILED.
-	FAILED
+	FAILED Status = "FAILED"
 )
 
 // SchedulingRecord is an object representing the database table.
@@ -150,7 +150,7 @@ func Get(id uint64) (*SchedulingRecord, error) {
 func GetExcludeDeleted(id uint64) (*SchedulingRecord, error) {
 	db := galaxyDB.GetDB()
 	var record SchedulingRecord
-	if err := db.Where("deleted_at = ?", 0).First(&record).Error; err != nil {
+	if err := db.Where("id = ?", id).Where("deleted_at = ?", 0).First(&record).Error; err != nil {
 		return nil, err
 	}
 	return &record, nil

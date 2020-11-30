@@ -1,7 +1,6 @@
 package models
 
 import (
-	log "github.com/sirupsen/logrus"
 	"gorm.io/gorm"
 )
 
@@ -141,7 +140,8 @@ func Attach(c *Condition) func(db *gorm.DB) *gorm.DB {
 				tx = tx.Where(k+" BETWEEN ? AND ?", t.GetLeft(), t.GetRight()) // common is numberic field.
 				break
 			default:
-				log.Error("Not support data type.")
+				// Customer data type.
+				tx = tx.Where(k+" = ?", t)
 			}
 		}
 		return tx

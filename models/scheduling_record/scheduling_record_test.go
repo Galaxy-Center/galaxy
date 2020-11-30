@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	db "github.com/galaxy-center/galaxy/lifecycle"
+	log "github.com/galaxy-center/galaxy/log"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
 	models "github.com/galaxy-center/galaxy/models"
 	"github.com/stretchr/testify/assert"
@@ -20,7 +21,13 @@ func TestCreate(t *testing.T) {
 	// Integrated database structure migration.
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	record := &SchedulingRecord{
 		TaskID:    uint64(1),
@@ -38,7 +45,13 @@ func TestCreate(t *testing.T) {
 func TestSave(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	record := &SchedulingRecord{
 		TaskID:    uint64(1),
@@ -61,7 +74,13 @@ func TestSave(t *testing.T) {
 func TestUpdates(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	record := &SchedulingRecord{
 		TaskID:    uint64(1),
@@ -84,7 +103,13 @@ func TestUpdates(t *testing.T) {
 func TestUpdatesFromMap(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	record := &SchedulingRecord{
 		TaskID:    uint64(1),
@@ -105,7 +130,13 @@ func TestUpdatesFromMap(t *testing.T) {
 func TestDelete(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	record := &SchedulingRecord{
 		TaskID:    uint64(1),
@@ -127,7 +158,13 @@ func TestDelete(t *testing.T) {
 func TestDeleteAt(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	record := &SchedulingRecord{
 		TaskID:    uint64(1),
@@ -149,7 +186,13 @@ func TestDeleteAt(t *testing.T) {
 func TestPaginateQuery(t *testing.T) {
 	m, _ := migrateProvider.BuildMigration()
 	migrateProvider.Up(m)
-	defer migrateProvider.Drop(m)
+	defer func() {
+		err := recover()
+		if err != nil {
+			log.Get().Error("Occurred error:", err)
+		}
+		migrateProvider.Drop(m)
+	}()
 
 	for i := 0; i < 10; i++ {
 		record := &SchedulingRecord{
@@ -179,7 +222,7 @@ func TestPaginateQuery(t *testing.T) {
 	p.SetAttachment(models.Attachment{})
 	p.GetAttachment()[models.PaginationColumns.Deleted] = true
 	p.GetAttachment()[models.PaginationColumns.TimeRange] = models.Uint64Range{}.Default()
-	p.GetAttachment()["status"] = 1
+	p.GetAttachment()["status"] = RUNNABLE
 
 	res, _ := PaginateQuery(p)
 	assert.NotNil(t, res, "res should not null")

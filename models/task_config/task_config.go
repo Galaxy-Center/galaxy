@@ -133,7 +133,7 @@ func Get(id uint64) (*TaskConfig, error) {
 func GetExcludeDeleted(id uint64) (*TaskConfig, error) {
 	db := galaxyDB.GetDB()
 	var config TaskConfig
-	if err := db.Where("deleted_at = ?", 0).First(&config).Error; err != nil {
+	if err := db.Where("id = ?", id).Where("deleted_at = ?", 0).First(&config).Error; err != nil {
 		return nil, err
 	}
 	return &config, nil
