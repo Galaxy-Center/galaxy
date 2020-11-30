@@ -8,6 +8,7 @@ import (
 	logger "github.com/galaxy-center/galaxy/log"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	// resources "github.com/galaxy-center/galaxy/resources"
 )
 
 var (
@@ -25,5 +26,8 @@ func main() {
 			"time": time.Now().String(),
 		})
 	})
+	// router.POST("/task", func(c *gin.Context) {
+	// 	c.JSON(resources.CreateT())
+	// })
 	router.Run(":8080")
 }
