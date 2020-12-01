@@ -16,8 +16,8 @@ type Database struct {
 var gormDB *gorm.DB
 
 // Init initials a database and save the reference to `Database` struct.
-func Init() {
-	dsn := "lance:Lancexu@1992@tcp(localhost:3306)/galaxy_test?charset=utf8mb4&parseTime=true&loc=Local"
+func init() {
+	dsn := "lance:Lancexu@1992@tcp(localhost:3306)/galaxy?charset=utf8mb4&parseTime=true&loc=Local"
 	db, err := gorm.Open(mysql.New(mysql.Config{
 		DSN:                       dsn,   // DSN data source name
 		DefaultStringSize:         256,   // string 类型字段的默认长度

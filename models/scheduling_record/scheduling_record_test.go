@@ -4,7 +4,6 @@ import (
 	"os"
 	"testing"
 
-	db "github.com/galaxy-center/galaxy/lifecycle"
 	log "github.com/galaxy-center/galaxy/log"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
 	models "github.com/galaxy-center/galaxy/models"
@@ -12,7 +11,6 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	db.Init()
 	code := m.Run()
 	os.Exit(code)
 }
