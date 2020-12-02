@@ -6,14 +6,12 @@ import (
 	"testing"
 	"time"
 
-	db "github.com/galaxy-center/galaxy/lifecycle"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
 	models "github.com/galaxy-center/galaxy/models"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestMain(m *testing.M) {
-	db.Init()
 	code := m.Run()
 	os.Exit(code)
 }
@@ -41,7 +39,7 @@ func TestCreate(t *testing.T) {
 
 	exist, _ := Get(1)
 	assert.NotNil(t, exist, "exist should be not null")
-	assert.EqualValues(t, 100, exist.ExpiredAt, "err")
+	assert.EqualValues(t, uint64(100), exist.ExpiredAt, "err")
 }
 
 func TestSave(t *testing.T) {

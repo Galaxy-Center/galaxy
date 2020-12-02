@@ -2,12 +2,7 @@ package services
 
 import (
 	"github.com/galaxy-center/galaxy/commons"
-	logger "github.com/galaxy-center/galaxy/log"
 	"github.com/galaxy-center/galaxy/models/task"
-)
-
-var (
-	log = logger.Get()
 )
 
 // CreateTask returns status.

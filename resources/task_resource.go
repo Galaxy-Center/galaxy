@@ -20,6 +20,7 @@ func CreateT(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, commons.Error(s))
 		return
 	}
+	log.WithField("task", t).Info("inserted a task")
 	c.JSON(http.StatusOK, commons.Success(t))
 }
 

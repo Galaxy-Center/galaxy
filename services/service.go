@@ -1,4 +1,4 @@
-package resources
+package services
 
 import (
 	logger "github.com/galaxy-center/galaxy/log"

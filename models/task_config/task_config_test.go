@@ -6,7 +6,6 @@ import (
 	"testing"
 	"time"
 
-	db "github.com/galaxy-center/galaxy/lifecycle"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
 	models "github.com/galaxy-center/galaxy/models"
 	"github.com/stretchr/testify/assert"
@@ -14,7 +13,6 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	db.Init()
 	code := m.Run()
 	os.Exit(code)
 }
