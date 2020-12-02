@@ -5,18 +5,39 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sync"
+	"sync/atomic"
 
+	logger "github.com/galaxy-center/galaxy/log"
 	"github.com/kelseyhightower/envconfig"
 )
 
-var(
-	log 
+var (
+	log      = logger.Get()
+	globalMu sync.Mutex
+	global   atomic.Value
 )
 
 const (
 	// MySQLDSNFormat string format
 	MySQLDSNFormat = "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=true&loc=Local"
 )
+
+func init() {
+	SetGlobal(Config{})
+}
+
+// SetGlobal store global config to atomic.Value
+func SetGlobal(conf Config) {
+	globalMu.Lock()
+	defer globalMu.Unlock()
+	global.Store(conf)
+}
+
+// Global returns global config from atomic.Value
+func Global() Config {
+	return global.Load().(Config)
+}
 
 // DBConfig defines for DB connection.
 type DBConfig struct {
