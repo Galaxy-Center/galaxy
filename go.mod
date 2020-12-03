@@ -9,6 +9,7 @@ require (
 	github.com/go-delve/delve v1.5.0 // indirect
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/golang-migrate/migrate v3.5.4+incompatible
 	github.com/golang-migrate/migrate/v4 v4.13.0
 	github.com/google/go-dap v0.3.0 // indirect
@@ -28,6 +29,7 @@ require (
 	github.com/pilagod/gorm-cursor-paginator v1.3.0 // indirect
 	github.com/prometheus/common v0.4.0
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/afero v1.3.5 // indirect
 	github.com/spf13/cobra v1.1.1 // indirect
