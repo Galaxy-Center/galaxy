@@ -4,6 +4,7 @@ package migrate
 import (
 	"fmt"
 
+	"github.com/galaxy-center/galaxy/config"
 	log "github.com/sirupsen/logrus"
 
 	"database/sql"
@@ -16,9 +17,10 @@ import (
 
 // BuildMigration returns *migrate.Migrate if everything is ok. otherwise return specified error.
 func BuildMigration() (*migrate.Migrate, error) {
+	dsn := config.Global().MySQLConfig.DSNFormat()
 	db, err := sql.Open(
 		"mysql",
-		"lance:Lancexu@1992@tcp(localhost:3306)/galaxy_test?charset=utf8mb4&parseTime=true&loc=Local&multiStatements=true")
+		dsn)
 	if err != nil {
 		log.Fatalf("couldn't connect to the Mysql database... %v", err)
 	}

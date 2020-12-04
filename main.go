@@ -6,13 +6,14 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/galaxy-center/galaxy/config"
+	dbProvider "github.com/galaxy-center/galaxy/lifecycle"
 	logger "github.com/galaxy-center/galaxy/log"
 	"github.com/galaxy-center/galaxy/resources"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	uuid "github.com/satori/go.uuid"
 )
+
+const ()
 
 var (
 	log     = logger.Get()
@@ -21,25 +22,10 @@ var (
 )
 
 func main() {
-	Start()
-
-	log.Info("galaxy server starting")
-
+	mainLog.Info("Galaxy Application starting.")
 	router := gin.Default()
 	registers(router)
 	router.Run(":8080")
-}
-
-// Start do somethings about inializations.
-func Start() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	config.SetNodeID("solo-" + uuid.NewV4().String())
-
-	if err := initialiseSystem(ctx); err != nil {
-		mainLog.Fatalf("Error initialising system: %v", err)
-	}
 }
 
 func registers(router *gin.Engine) {
@@ -54,7 +40,13 @@ func registers(router *gin.Engine) {
 	taskGroup.GET("/:id", resources.GetT)
 }
 
-func initialiseSystem(ctx context.Context) error {
+func init() {
+	_, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	return nil
+	// if err := config.InitialiseSystem(); err != nil {
+	// 	mainLog.Fatalf("Error initialising system: %v", err)
+	// }
+
+	dbProvider.Init()
 }

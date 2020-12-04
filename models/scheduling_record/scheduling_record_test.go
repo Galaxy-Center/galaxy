@@ -4,11 +4,18 @@ import (
 	"os"
 	"testing"
 
+	"github.com/galaxy-center/galaxy/config"
+	db "github.com/galaxy-center/galaxy/lifecycle"
 	log "github.com/galaxy-center/galaxy/log"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
 	models "github.com/galaxy-center/galaxy/models"
 	"github.com/stretchr/testify/assert"
 )
+
+func init() {
+	config.SetTestMode(true)
+	db.Init()
+}
 
 func TestMain(m *testing.M) {
 	code := m.Run()

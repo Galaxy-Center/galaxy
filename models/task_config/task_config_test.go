@@ -6,11 +6,18 @@ import (
 	"testing"
 	"time"
 
+	"github.com/galaxy-center/galaxy/config"
+	db "github.com/galaxy-center/galaxy/lifecycle"
 	migrateProvider "github.com/galaxy-center/galaxy/migrate"
 	models "github.com/galaxy-center/galaxy/models"
 	"github.com/stretchr/testify/assert"
 	"gorm.io/datatypes"
 )
+
+func init() {
+	config.SetTestMode(true)
+	db.Init()
+}
 
 func TestMain(m *testing.M) {
 	code := m.Run()
