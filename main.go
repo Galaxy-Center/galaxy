@@ -36,8 +36,11 @@ func registers(router *gin.Engine) {
 		})
 	})
 	taskGroup := router.Group("/v1/task")
-	taskGroup.POST("/", resources.CreateT)
 	taskGroup.GET("/:id", resources.GetT)
+	taskGroup.GET("", resources.GetTWith)
+	taskGroup.POST("/", resources.CreateT)
+	taskGroup.POST("/:id", resources.UpdateT)
+	taskGroup.POST("/:id", resources.DeleteT)
 }
 
 func init() {
