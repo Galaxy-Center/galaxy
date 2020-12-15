@@ -41,6 +41,10 @@ var (
 			Port:     3306,
 			Database: "galaxy_test",
 		},
+		App: App{
+			AppName: AppName,
+			Version: VERSION,
+		},
 	}
 )
 
@@ -65,6 +69,14 @@ func SetGlobal(conf Config) {
 // Global returns global config from atomic.Value
 func Global() Config {
 	return global.Load().(Config)
+}
+
+// App cache node info.
+type App struct {
+	AppName string `json:"appName"`
+	Version string `json:"version"`
+	StartAt uint64 `json:"startAt"`
+	NodeID  string `json:"nodeID"`
 }
 
 // DBConfig defines for DB connection.
@@ -98,6 +110,8 @@ type Config struct {
 	LivenessCheck LivenessCheckConfig `json:"liveness_check"`
 
 	MySQLConfig DBConfig `json:"mysql_config"`
+
+	App App `json:"app"`
 }
 
 // Load will load a configuration file, trying each of the paths given

@@ -4,8 +4,8 @@ package main
 import (
 	"context"
 	"net/http"
-	"time"
 
+	"github.com/galaxy-center/galaxy/config"
 	dbProvider "github.com/galaxy-center/galaxy/lifecycle"
 	logger "github.com/galaxy-center/galaxy/log"
 	"github.com/galaxy-center/galaxy/resources"
@@ -26,21 +26,20 @@ func main() {
 	router := gin.Default()
 	registers(router)
 	router.Run(":8080")
+
 }
 
 func registers(router *gin.Engine) {
 	router.GET("/about", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"app":  "galaxy",
-			"time": time.Now().String(),
-		})
+		c.JSON(http.StatusOK, config.GetApp())
 	})
+
 	taskGroup := router.Group("/v1/task")
 	taskGroup.GET("/:id", resources.GetT)
-	taskGroup.GET("", resources.GetTWith)
+	taskGroup.GET("/", resources.GetTWith)
 	taskGroup.POST("/", resources.CreateT)
 	taskGroup.POST("/:id", resources.UpdateT)
-	taskGroup.POST("/:id", resources.DeleteT)
+	taskGroup.DELETE("/:id", resources.DeleteT)
 }
 
 func init() {
