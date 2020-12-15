@@ -122,7 +122,7 @@ func Paginate(p *Pagination) func(db *gorm.DB) *gorm.DB {
 // Note: will attach fields by go interface assertion.
 func Attach(c *Condition) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		tx := db.Where("created_at BETWEEN ? AND ?", c.GetFrom(), c.GetTo())
+		tx := db.Where("created_at BETWEEN ? AND ?", c.GetStartTime(), c.GetEndTime())
 		if c.IsExcludeInactived() {
 			tx = tx.Where("deleted_at = ?", 0)
 		}

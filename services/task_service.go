@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/galaxy-center/galaxy/commons"
+	"github.com/galaxy-center/galaxy/models"
 	"github.com/galaxy-center/galaxy/models/task"
 )
 
@@ -63,4 +64,15 @@ func GetTask(id uint64) (*task.Task, *commons.Error) {
 			Error: fmt.Errorf("Not found %d", id)}
 	}
 	return t, nil
+}
+
+// GetTasksWith pagination queries.
+func GetTasksWith(p *models.Pagination) (*models.Response, *commons.Error) {
+	res, err := task.PaginateQuery(p)
+	if err != nil {
+		log.WithField("pagination", p).Error("occurred exception when getting tasks")
+		return nil, commons.StatusDBOperationAbnormal
+	}
+
+	return &res, nil
 }

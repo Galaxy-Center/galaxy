@@ -138,13 +138,13 @@ func (c *Condition) SetTimeRange(r Uint64Range) {
 	c.timeRange = r
 }
 
-// GetFrom getter of from.
-func (c *Condition) GetFrom() uint64 {
+// GetStartTime getter of from.
+func (c *Condition) GetStartTime() uint64 {
 	return c.timeRange.GetLeft()
 }
 
-//GetTo getter of to.
-func (c *Condition) GetTo() uint64 {
+//GetEndTime getter of to.
+func (c *Condition) GetEndTime() uint64 {
 	return c.timeRange.GetRight()
 }
 
