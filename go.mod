@@ -12,6 +12,7 @@ require (
 	github.com/franela/goreq v0.0.0-20171204163338-bcd34c9993f8 // indirect
 	github.com/friendsofgo/errors v0.9.2
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/funkygao/golib v0.0.0-20201214014642-4ba11e4c8deb
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-delve/delve v1.5.0 // indirect
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
@@ -60,6 +61,7 @@ require (
 	github.com/x-cray/logrus-prefixed-formatter v0.5.2
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
+	github.com/yakuter/go-concurrency v0.0.0-20201206104306-6cb7c8f77864 // indirect
 	go.starlark.net v0.0.0-20201118183435-e55f603d8c79 // indirect
 	golang.org/x/arch v0.0.0-20201008161808-52c3e6f60cff // indirect
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect

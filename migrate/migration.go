@@ -3,6 +3,10 @@ package migrate
 
 import (
 	"fmt"
+	"path"
+	"path/filepath"
+	"runtime"
+	"strings"
 
 	"github.com/galaxy-center/galaxy/config"
 	log "github.com/sirupsen/logrus"
@@ -33,7 +37,7 @@ func BuildMigration() (*migrate.Migrate, error) {
 		log.Fatalf("couldn't not start sql migration... %v", err)
 	}
 	m, err := migrate.NewWithDatabaseInstance(
-		fmt.Sprintf("file://%s", "../migrationfiles"),
+		fmt.Sprintf("file://%s%s", rootDir(), "/migrate/migrationfiles"),
 		"mysql",
 		driver,
 	)
@@ -42,6 +46,14 @@ func BuildMigration() (*migrate.Migrate, error) {
 		return nil, err
 	}
 	return m, nil
+}
+
+func rootDir() string {
+	_, b, _, _ := runtime.Caller(0) // ../migrate/migration.go
+	for !strings.HasSuffix(b, "galaxy") {
+		b = path.Dir(b)
+	}
+	return filepath.Dir(b) + "/galaxy" // ../galaxy/
 }
 
 // Up execute up migrations.

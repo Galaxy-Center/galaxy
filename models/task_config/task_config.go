@@ -124,6 +124,9 @@ func Get(id uint64) (*TaskConfig, error) {
 	db := galaxyDB.GetDB()
 	var config TaskConfig
 	if err := db.First(&config, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &config, nil

@@ -1,6 +1,7 @@
 package task
 
 import (
+	"errors"
 	"time"
 
 	galaxyDB "github.com/galaxy-center/galaxy/lifecycle"
@@ -199,6 +200,9 @@ func Get(id uint64) (*Task, error) {
 	db := galaxyDB.GetDB()
 	var task Task
 	if err := db.First(&task, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &task, nil

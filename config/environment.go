@@ -64,10 +64,7 @@ func InitialiseSystem() error {
 		SetGlobal(globalConf)
 		afterConfSetup(&globalConf)
 	}
-	log.WithFields(logrus.Fields{
-		"App":    AppName,
-		"NodeID": NodeID,
-	}).Infof("Initialised env setup")
+	log.WithFields(logrus.Fields{"App": AppName, "NodeID": NodeID}).Infof("Initialised env setup")
 	return nil
 }
 

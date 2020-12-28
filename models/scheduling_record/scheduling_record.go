@@ -1,6 +1,7 @@
 package schedulingrecord
 
 import (
+	"errors"
 	"time"
 
 	galaxyDB "github.com/galaxy-center/galaxy/lifecycle"
@@ -141,6 +142,9 @@ func Get(id uint64) (*SchedulingRecord, error) {
 	db := galaxyDB.GetDB()
 	var record SchedulingRecord
 	if err := db.First(&record, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, err
 	}
 	return &record, nil

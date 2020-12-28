@@ -8,6 +8,7 @@ import (
 	"github.com/galaxy-center/galaxy/config"
 	dbProvider "github.com/galaxy-center/galaxy/lifecycle"
 	logger "github.com/galaxy-center/galaxy/log"
+	"github.com/galaxy-center/galaxy/migrate"
 	"github.com/galaxy-center/galaxy/resources"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -37,7 +38,7 @@ func registers(router *gin.Engine) {
 	taskGroup := router.Group("/v1/task")
 	taskGroup.GET("/:id", resources.GetT)
 	taskGroup.GET("/", resources.GetTWith)
-	taskGroup.POST("/", resources.CreateT)
+	taskGroup.PUT("/", resources.CreateT)
 	taskGroup.POST("/:id", resources.UpdateT)
 	taskGroup.DELETE("/:id", resources.DeleteT)
 }
@@ -51,4 +52,6 @@ func init() {
 	// }
 
 	dbProvider.Init()
+	m, _ := migrate.BuildMigration()
+	migrate.Up(m)
 }
